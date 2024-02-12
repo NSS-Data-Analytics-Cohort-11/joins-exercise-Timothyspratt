@@ -46,7 +46,7 @@ ORDER BY number_of_films DESC
 
 --5. Write a query that returns the five distributors with the highest average movie budget.
 
-SELECT company_name, AVG(film_budget) AS film_budget
+SELECT company_name, ROUND(AVG(film_budget), 2) AS film_budget
 FROM distributors
 INNER JOIN specs
 ON distributors.distributor_id = specs.domestic_distributor_id
@@ -61,10 +61,27 @@ LIMIT 5;
 
 --6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
 
-SELECT
-FROM
+SELECT headquarters, film_title, imdb_rating
+FROM distributors
+INNER JOIN specs
+ON distributors.distributor_id = specs.domestic_distributor_id
+INNER JOIN rating
+ON specs.movie_id = rating.movie_id
+WHERE headquarters NOT LIKE '%, CA%'
+ORDER BY imdb_rating DESC
+
+--Answer: There are 2 movies that were not distributed by a California company. The movie that has the highest imdb rating is 'Dirty Dancing'
+
 
 --7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
 
 SELECT
-FROM
+CASE
+	WHEN length_in_min >= 120 THEN '>2 Hours'
+	ELSE '<2 Hours'
+END AS length_of_movie, ROUND(avg(imdb_rating), 2) AS avg_rating
+FROM specs
+INNER JOIN rating
+USING (movie_id)
+GROUP BY length_of_movie
+ORDER BY avg_rating DESC;
