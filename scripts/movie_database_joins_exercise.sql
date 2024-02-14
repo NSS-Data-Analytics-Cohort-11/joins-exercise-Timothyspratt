@@ -85,3 +85,5 @@ INNER JOIN rating
 USING (movie_id)
 GROUP BY length_of_movie
 ORDER BY avg_rating DESC;
+
+--Answer: Movies that are over 2 hours long have a higher average rating.
